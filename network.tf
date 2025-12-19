@@ -21,15 +21,28 @@ resource "aws_subnet" "public" {
   )
 }
 
-resource "aws_subnet" "private" {
+resource "aws_subnet" "private_1" {
   cidr_block        = var.subnet_cidr_list[1]
   vpc_id            = aws_vpc.main.id
-  availability_zone       = data.aws_availability_zones.available.names[0]
+  availability_zone = data.aws_availability_zones.available.names[0]
+
   tags = merge(
     local.common_tags,
-    tomap({ "Name" = "${local.prefix}-private" })
+    tomap({ "Name" = "${local.prefix}-private-1" })
   )
 }
+
+resource "aws_subnet" "private_2" {
+  cidr_block        = "10.0.3.0/24"
+  vpc_id            = aws_vpc.main.id
+  availability_zone = data.aws_availability_zones.available.names[1]
+
+  tags = merge(
+    local.common_tags,
+    tomap({ "Name" = "${local.prefix}-private-2" })
+  )
+}
+
 
 # Internet gateway to enable trafic from internet
 resource "aws_internet_gateway" "main" {
@@ -83,10 +96,16 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-resource "aws_route_table_association" "private" {
-  subnet_id      = aws_subnet.private.id
+resource "aws_route_table_association" "private_1" {
+  subnet_id      = aws_subnet.private_1.id
   route_table_id = aws_route_table.private.id
 }
+
+resource "aws_route_table_association" "private_2" {
+  subnet_id      = aws_subnet.private_2.id
+  route_table_id = aws_route_table.private.id
+}
+
 
 resource "aws_route" "private-internet_out" {
   route_table_id         = aws_route_table.private.id

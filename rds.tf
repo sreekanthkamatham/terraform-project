@@ -23,7 +23,7 @@ resource "aws_security_group" "rds" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = [aws_subnet.private.cidr_block]
+    security_groups = [aws_security_group.ec2.id]
   }
 
   egress {
@@ -60,8 +60,12 @@ resource "aws_db_instance" "postgres" {
 
 // Create a DB subnet group for the RDS instance
 resource "aws_db_subnet_group" "main" {
-  name       = "${var.prefix}-db-subnet-group"
-  subnet_ids = [aws_subnet.private.id]
+  name = "${var.prefix}-db-subnet-group"
+
+  subnet_ids = [
+    aws_subnet.private_1.id,
+    aws_subnet.private_2.id
+  ]
 
   tags = merge(
     local.common_tags,
