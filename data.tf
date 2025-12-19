@@ -25,6 +25,3 @@ data "aws_ami" "ubuntu_2404" {
 }
 
 
-data "aws_region" "current" {
-
-}
