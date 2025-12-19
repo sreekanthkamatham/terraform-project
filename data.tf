@@ -24,4 +24,7 @@ data "aws_ami" "ubuntu_2404" {
   owners = ["099720109477"] # Canonical (official Ubuntu)
 }
 
+data "aws_availability_zones" "available" {
+  state = "available"
+}
 

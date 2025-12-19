@@ -19,7 +19,7 @@ output "rds_endpoint" {
   value       = aws_db_instance.postgres.endpoint
 }
 
-output "ec2_instance_id" {
+output "public_ec2_id" {
   description = "The ID of the EC2 instance"
-  value       = aws_instance.ec2.id
+  value       = aws_instance.public.id
 }
