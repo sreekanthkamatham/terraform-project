@@ -84,13 +84,7 @@ resource "aws_security_group" "ec2" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    security_groups = [aws_security_group.rds.id]
-  }
-
+  # EC2 can talk out to anything (including RDS)
   egress {
     from_port   = 0
     to_port     = 0
@@ -98,8 +92,7 @@ resource "aws_security_group" "ec2" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(
-    local.common_tags,
-    tomap({ "Name" = "${local.prefix}-ec2-sg" })
-  )
+  tags = {
+    Name = "${local.prefix}-ec2-sg"
+  }
 }
